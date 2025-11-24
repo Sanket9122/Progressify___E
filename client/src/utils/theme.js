@@ -13,6 +13,11 @@ export const appTheme = createTheme({
         secondary: {
           main: '#9c27b0',
         },
+        custom: {
+          background: '#f0f2f5',
+          paper: '#ffffff',
+          text: '#333333',
+        },
       },
     },
     dark: {
@@ -22,6 +27,11 @@ export const appTheme = createTheme({
         },
         secondary: {
           main: '#ce93d8',
+        },
+        custom: {
+          background: '#121212',
+          paper: '#1e1e1e',
+          text: '#ffffff',
         },
       },
     },

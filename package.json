@@ -1,10 +1,10 @@
 {
   "name": "progressify___e",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "gemini": "gemini"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,22 @@
   "bugs": {
     "url": "https://github.com/Sanket9122/Progressify___E/issues"
   },
-  "homepage": "https://github.com/Sanket9122/Progressify___E#readme"
+  "homepage": "https://github.com/Sanket9122/Progressify___E#readme",
+  "description": "",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "express-async-handler": "^1.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.18.2",
+    "nodemailer": "^7.0.4",
+    "nodemon": "^3.1.10",
+    "puppeteer": "^24.22.0",
+    "validator": "^13.15.15"
+  },
+  "devDependencies": {
+    "@google/gemini-cli": "^0.17.1"
+  }
 }

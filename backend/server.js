@@ -1,26 +1,22 @@
-require('dotenv').config();
-const express = require('express');
-const config = require('./config/config');
+const app = require('./app');
+const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 
-// Initialize app
-const app = express();
+// Load env vars
+dotenv.config();
 
-// Connect to Database
+// Connect to database
 connectDB();
 
-// Middleware
-app.use(express.json());
+const PORT = process.env.PORT || 3000;
 
-// Routes
-app.use('/api/auth', require('./routes/authRoutes'));
-
-// Basic route
-app.get('/', (req, res) => {
-  res.send('API Running');
+const server = app.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
 });
 
-// Start server
-app.listen(config.port, () => {
-  console.log(`Server running in ${config.environment} mode on port ${config.port}`);
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err, promise) => {
+  console.log(`Error: ${err.message}`);
+  // Close server & exit process
+  server.close(() => process.exit(1));
 });

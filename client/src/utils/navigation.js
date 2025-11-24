@@ -9,6 +9,9 @@ import LogoutIcon from '@mui/icons-material/Logout';
 //code for importing the Pages 
 import DashBoard from '../Pages/DashBoard';
 import TeamsPage from '../Pages/TeamsPage';
+// import LoginPage from '../Pages/LoginPage';
+// import SignUpPage from '../Pages/SignupPage';
+
 
 export const NAVIGATION = [
   {
@@ -55,7 +58,15 @@ export const NAVIGATION = [
         segment: 'login',
         title: 'Login',
         icon: <LoginIcon />,
+        // component: LoginPage
       },
+      {
+      segment: 'register', 
+      title: 'Sign Up',
+      // icon: <LogoutIcon />,
+      // component: SignUpPage , 
+      hidden :true, 
+    },
       {
         segment: 'logout',
         title: 'Logout',
