@@ -4,11 +4,15 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
+import FolderIcon from '@mui/icons-material/Folder'; // Import for projects icon
+import PersonIcon from '@mui/icons-material/Person'; // Import for profile icon
 
 
 //code for importing the Pages 
 import DashBoard from '../Pages/DashBoard';
 import TeamsPage from '../Pages/TeamsPage';
+import ProjectsPage from '../Pages/ProjectsPage'; // Import ProjectsPage
+import ProfilePage from '../Pages/ProfilePage'; // Import ProfilePage
 // import LoginPage from '../Pages/LoginPage';
 // import SignUpPage from '../Pages/SignupPage';
 
@@ -23,6 +27,12 @@ export const NAVIGATION = [
     title: 'Dashboard',
     icon: <DashboardIcon />,
     component: DashBoard
+  },
+  {
+    segment: 'projects', // New segment for projects
+    title: 'Projects',
+    icon: <FolderIcon />,
+    component: ProjectsPage
   },
   {
     segment: 'teams',
@@ -71,6 +81,12 @@ export const NAVIGATION = [
         segment: 'logout',
         title: 'Logout',
         icon: <LogoutIcon />,
+      },
+      {
+        segment: 'profile', // New segment for profile
+        title: 'Profile',
+        icon: <PersonIcon />,
+        component: ProfilePage,
       },
     ],
   },
