@@ -43,7 +43,7 @@ const DashBoard = () => {
     }, [user]);
 
     return (
-        <Box sx={{ p: theme.spacing(3), backgroundColor: theme.palette.background, minHeight: '100vh' }}>
+        <Box sx={{ p: theme.spacing(3), backgroundColor: theme.palette.background.default, minHeight: '100vh' }}>
             <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', color: 'text.primary', mb: theme.spacing(3) }}>
                 Dashboard
             </Typography>
@@ -53,9 +53,12 @@ const DashBoard = () => {
                 <Grid item xs={12} lg={8}>
                     <Card sx={{ borderRadius: '12px', height: '100%' }}>
                         <CardContent>
-                            <Grid container justifyContent="space-between" alignItems="center" mb={2}>
-                                <Typography variant="h5" sx={{ fontWeight: 'bold' }}>Latest Projects</Typography>
-                                <Button variant="contained" component={Link} to="/projects">View All</Button>
+                            <Grid container justifyContent="space-between" alignItems="center" mb={theme.spacing(2)}>
+                                <Grid item sx={{ display: 'flex', alignItems: 'center' }}>
+                                    <FolderIcon fontSize="medium" color="primary" sx={{ mr: 1 }} />
+                                    <Typography variant="h5" sx={{ fontWeight: 'bold' }}>Latest Projects</Typography>
+                                </Grid>
+                                <Button variant="text" component={Link} to="/projects" sx={{ textTransform: 'none' }}>View All</Button>
                             </Grid>
                             <Grid container spacing={2}>
                                 {latestProjects.length > 0 ? (
@@ -97,7 +100,7 @@ const DashBoard = () => {
                             <Typography variant="body2" color="text.secondary" sx={{ mb: theme.spacing(3) }}>
                                 Role: {user?.role || 'N/A'}
                             </Typography>
-                            <Button variant="outlined" component={Link} to="/profile" sx={{ mt: 'auto' }}>View Profile</Button>
+                            <Button variant="text" component={Link} to="/profile" sx={{ mt: 'auto', textTransform: 'none' }}>View Profile</Button>
                         </CardContent>
                     </Card>
                 </Grid>
@@ -106,7 +109,10 @@ const DashBoard = () => {
                 <Grid item xs={12} md={6}>
                     <Card sx={{ borderRadius: '12px', height: '100%' }}>
                         <CardContent>
-                            <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2 }}>Action Items</Typography>
+                            <Grid container alignItems="center" mb={theme.spacing(2)}>
+                                <PlaylistAddCheckIcon fontSize="medium" color="error" sx={{ mr: 1 }} />
+                                <Typography variant="h5" sx={{ fontWeight: 'bold' }}>Action Items</Typography>
+                            </Grid>
                             {actionItems.length > 0 ? (
                                 actionItems.map((item) => (
                                     <Card key={item._id} variant="outlined" sx={{ mb: 1.5, borderRadius: '8px' }}>
@@ -132,7 +138,10 @@ const DashBoard = () => {
                 <Grid item xs={12} md={6}>
                     <Card sx={{ borderRadius: '12px', height: '100%' }}>
                         <CardContent>
-                            <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2 }}>Progress Analytics</Typography>
+                            <Grid container alignItems="center" mb={theme.spacing(2)}>
+                                <BarChartIcon fontSize="medium" color="success" sx={{ mr: 1 }} />
+                                <Typography variant="h5" sx={{ fontWeight: 'bold' }}>Progress Analytics</Typography>
+                            </Grid>
                             <Typography>This section will display progress analytics for the logged-in user.</Typography>
                         </CardContent>
                     </Card>
