@@ -32,6 +32,6 @@
     "validator": "^13.15.15"
   },
   "devDependencies": {
-    "@google/gemini-cli": "^0.21.3"
+    "@google/gemini-cli": "^0.22.5"
   }
 }

@@ -1,7 +1,16 @@
 const asyncHandler = require ('express-async-handler');
 const Project = require('../models/ProjectModels');
 const Task = require('../models/Task');
+// controller to get all projects  , with optional limit 
+const getProjects = asyncnHandler(async (req ,res) =>{
+    const limit = parseInt(req.query.limit , 10) || 0;
 
+    const projects = await Project.find()
+    .sort({ createdAt: -1 })
+    .limit(limit)
+    .populate('creator', 'name email');
+    res.status(200).json(projects);
+});
 // controller to create a new project 
 
 
@@ -80,6 +89,7 @@ const deleteProjectById = asyncHandler(async (req, res) => {
 });
 
 module.exports =  {
+    getProjects,
     createProject,
     accessprojectById,
     updateProjectById,
