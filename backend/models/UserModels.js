@@ -41,6 +41,11 @@ const UserSchema = new mongoose.Schema({
     default: 'user',
     required: true,
   },
+  team: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Team',
+    required: false,
+  },
 }, { timestamps: true });
 
 // Encrypt password before saving

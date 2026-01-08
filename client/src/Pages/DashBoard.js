@@ -43,7 +43,7 @@ const DashBoard = () => {
     }, [user]);
 
     return (
-        <Box sx={{ p: theme.spacing(3), backgroundColor: theme.palette.background.default, minHeight: '100vh' }}>
+        <Box sx={{ p: theme.spacing(3), backgroundColor:theme.palette.mode === 'dark' ? theme.palette.background.default : theme.palette.background.white , minHeight: '100vh' }}>
             <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', color: 'text.primary', mb: theme.spacing(3) }}>
                 Dashboard
             </Typography>

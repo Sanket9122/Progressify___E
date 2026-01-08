@@ -48,6 +48,7 @@ const registerUser = asyncHandler (async(req ,res )=>{
             username: user.username,
             email: user.email,
             token: tokenGenerator.generateToken(user), /// generate jwt token for the new user
+            ...(user.team && { team: user.team }),
         });
     }
     else {
@@ -71,7 +72,7 @@ const LoginUser = asyncHandler(async(req,res)=>{
     }
     // check if the user exists 
 //.select('+password') is used to include the password field in the query result, as it is usually excluded by default for security reasons.
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email }).select('+password').populate('team', 'name description'); // Populate team field
     if(!user){
         res.status(404).json({message :'user does not exist'});
     }
@@ -86,6 +87,7 @@ const LoginUser = asyncHandler(async(req,res)=>{
       username: user.username,
       email: user.email,
       token: tokenGenerator.generateToken(user), // Generate JWT for the logged-in user
+      ...(user.team && { team: user.team }), // Include team data if available
     });
   } else {
     res.status(401); // Unauthorized

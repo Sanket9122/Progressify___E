@@ -1,6 +1,38 @@
-const asyncHandler = require('express-async-handler'); // Simple middleware for handling exceptions inside of async express routes and passing them to your express error handlers.
+const asyncHandler = require('express-async-handler');
 const TeamMember = require('../models/TeamMember');
-const User = require('../models/UserModels'); // Required if associating team members with user accounts
+const User = require('../models/UserModels');
+const Team = require('../models/TeamModels');
+
+/**
+ * @desc    Get the team for the logged-in user
+ * @route   GET /api/team-members/my-team
+ * @access  Private
+ */
+const getMyTeam = asyncHandler(async (req, res) => {
+  // Find the team member profile for the logged-in user
+  const teamMemberProfile = await TeamMember.findOne({ associatedUser: req.user._id });
+
+  if (!teamMemberProfile) {
+    res.status(404);
+    throw new Error('You are not assigned to any team.');
+  }
+
+  // Find the team and populate it with its members' details
+  const team = await Team.findById(teamMemberProfile.team).populate({
+    path: 'teamMembers',
+    populate: {
+      path: 'associatedUser',
+      select: 'name email', // Select fields from User model
+    },
+  });
+
+  if (!team) {
+    res.status(404);
+    throw new Error('Team not found.');
+  }
+
+  res.status(200).json(team);
+});
 
 /**
  * @desc    Add a new team member
@@ -171,6 +203,7 @@ const deleteTeamMember = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
+  getMyTeam,
   addTeamMember,
   getTeamMembers,
   getTeamMemberById,

@@ -29,6 +29,11 @@ const teamMemberSchema = mongoose.Schema(
       sparse: true, // Allows null values while maintaining uniqueness for non-null values
       default: null,
     },
+    team:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Team', // Refers to the Team model
+      required: true, // Each team member must belong to a team
+    },
   },
   {
     timestamps: true, // Adds createdAt and updatedAt fields automatically
