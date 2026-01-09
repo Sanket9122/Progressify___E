@@ -2,7 +2,7 @@
 
 Progressify is a full-stack project management tool designed to help teams organize tasks, track progress, and collaborate effectively.
 
-![Dashboard](img/dashboard.jpeg)
+<!-- ![Dashboard](img/dashboard.jpeg) -->
 
 ## Features
 
@@ -112,5 +112,5 @@ The application will be available at `http://localhost:3000`.
 ## Screenshots
 
 **Team Page**
-![Team Page](img/team%20page.png)
+<!-- ![Team Page](img/team%20page.png) -->
 
