@@ -83,8 +83,8 @@ To get a local copy up and running, follow these simple steps.
         ```sh
         npm start
         ```
-
-The application will be available at `http://localhost:3000`.
+<!-- 
+The application will be available at `http://localhost:3000`. -->
 
 ## Folder Structure
 
