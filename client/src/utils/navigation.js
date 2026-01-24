@@ -13,8 +13,8 @@ import DashBoard from '../Pages/DashBoard';
 import TeamsPage from '../Pages/TeamsPage';
 import ProjectsPage from '../Pages/ProjectsPage'; // Import ProjectsPage
 import ProfilePage from '../Pages/ProfilePage'; // Import ProfilePage
-// import LoginPage from '../Pages/LoginPage';
-// import SignUpPage from '../Pages/SignupPage';
+import LoginPage from '../Pages/LoginPage';
+import SignupPage from '../Pages/SignUpPage';
 
 
 export const NAVIGATION = [
@@ -68,14 +68,14 @@ export const NAVIGATION = [
         segment: 'login',
         title: 'Login',
         icon: <LoginIcon />,
-        // component: LoginPage
+        component: LoginPage
       },
       {
       segment: 'register', 
       title: 'Sign Up',
-      // icon: <LogoutIcon />,
-      // component: SignUpPage , 
-      hidden :true, 
+      icon: <LogoutIcon />,
+      component: SignupPage , 
+      hidden :false, 
     },
       {
         segment: 'logout',

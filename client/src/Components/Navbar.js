@@ -3,101 +3,119 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { appTheme } from '../utils/theme';
-
 import { AppProvider } from '@toolpad/core/AppProvider';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import { useDemoRouter } from '@toolpad/core/internal';
-
-// Importing the logo and pages
 import logosrc from '../assets/Progressify2.jpeg';
-
-import {Link as RouterLink , useLocation} from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { NAVIGATION } from '../utils/navigation';
+import { AuthContext } from '../context/AuthContext';
+import { CircularProgress } from '@mui/material';
 
-function filterNavigation(navigationItems) {
+const ADMIN_ONLY_SEGMENTS = ['teams']; // Segments that require admin role
+
+function filterNavigation(navigationItems, user) {
   return navigationItems.flatMap(item => {
-    // If the item is marked hidden, skip it entirely.
-    if (item.hidden) {
-      return []; // return empty array to remove item
+    // Hide item if it's admin-only and the user is not an admin
+    if (user && user.role !== 'admin' && ADMIN_ONLY_SEGMENTS.includes(item.segment)) {
+      return [];
     }
 
-    // If the item has children, recursively filter them
+    const isAuthPage = item.segment === 'Authentication' || item.parent?.segment === 'Authentication';
+
+    // Rules for logged-out users
+    if (!user) {
+      if (item.segment === 'login' || item.segment === 'register') {
+        return [item];
+      }
+      if (isAuthPage && item.children) {
+        const filteredChildren = filterNavigation(item.children, user);
+        if (filteredChildren.length > 0) {
+          return [{ ...item, children: filteredChildren }];
+        }
+      }
+      return [];
+    }
+
+    // Rules for logged-in users
+    if (user) {
+      if (item.segment === 'login' || item.segment === 'register') {
+        return [];
+      }
+    }
+
     if (item.children) {
-      const filteredChildren = filterNavigation(item.children);
-      // Only return the parent item if it still has children OR if it's a link itself.
+      const filteredChildren = filterNavigation(item.children, user);
       if (filteredChildren.length > 0) {
         return [{ ...item, children: filteredChildren }];
       }
-      // If the parent is just a folder for links and all links are hidden, skip the folder.
       if (!item.component && !item.segment) {
         return [];
       }
     }
-    
-    // Return the item if not hidden and no children logic applied
+
+    if (item.hidden) {
+      return [];
+    }
+
     return [item];
   });
 }
-// function findPageComponent(pathname, navigation) {
-//   for (const item of navigation) {
-//     // 1. Check for a direct component match
-//     if (pathname.endsWith(`/${item.segment}`)) {
-//       if (item.component) {
-//         return item.component;
-//       }
-//     }
-    
-//     // 2. Check children (nested routes)
-//     if (item.children) {
-//       const childComponent = findPageComponent(pathname, item.children);
-//       if (childComponent) {
-//         return childComponent;
-//       }
-//     }
-//   }
-//   return null;
-// }
-// navbar.js (The fixed findPageComponent function)
 
 function findPageComponent(pathname, navigation) {
-  // Extract the last segment of the path.
-  // Example: If pathname is '/Progressify/Authentication/register', this extracts 'register'.
-  // If useDemoRouter is only returning 'register', this also works.
   const currentSegment = pathname.split('/').pop();
 
-  function searchRecursive (items)  {
+  function searchRecursive(items) {
     for (const item of items) {
-      // 1. Check for a direct match using the last segment
       if (item.segment === currentSegment && item.component) {
-          return item.component;
-        
+        return { component: item.component, item };
       }
-
-      // 2. Check children (nested routes)
       if (item.children) {
-        const childComponent = searchRecursive(item.children);
-        if (childComponent) {
-          return childComponent;
+        const childResult = searchRecursive(item.children);
+        if (childResult) {
+          return childResult;
         }
       }
     }
     return null;
   }
-
   return searchRecursive(navigation);
 }
-function DemoPageContent({ pathname, navigation }) {
-  // // Find the current page in navigation
-  // const currentPage = navigation.find(item => item.segment === pathname.split('/').pop());
-  
-  // // If the selected page has a custom component, render it
-  // if (currentPage?.component) {
-  //   const PageComponent = currentPage.component;
-  //   return <PageComponent />;
-  // }
-  const PageComponent = findPageComponent(pathname, navigation);
 
-  // If a component is found, render it
+function DemoPageContent({ pathname, navigation }) {
+  const { user, loading, logout } = React.useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const result = findPageComponent(pathname, navigation);
+  const PageComponent = result?.component;
+  const navItem = result?.item;
+
+  React.useEffect(() => {
+    if (pathname.endsWith('/logout')) {
+      logout();
+      navigate('/login');
+      return;
+    }
+
+    if (!loading && !user && navItem && navItem.segment !== 'login' && navItem.segment !== 'register') {
+      navigate('/login');
+    }
+    
+    // Redirect if a non-admin tries to access an admin-only page
+    if (!loading && user && user.role !== 'admin' && navItem && ADMIN_ONLY_SEGMENTS.includes(navItem.segment)) {
+        navigate('/dashboard'); // Or to a dedicated 'unauthorized' page
+    }
+
+  }, [pathname, loading, user, navItem, navigate, logout]);
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   if (PageComponent) {
     return <PageComponent />;
   }
@@ -112,31 +130,42 @@ function DemoPageContent({ pathname, navigation }) {
         textAlign: 'center',
       }}
     >
-      <Typography>Dashboard content for {pathname}</Typography>
+      <Typography>Select a page from the navigation.</Typography>
     </Box>
   );
 }
 
 DemoPageContent.propTypes = {
   pathname: PropTypes.string.isRequired,
+  navigation: PropTypes.array.isRequired,
 };
 
 function DashboardLayoutBranding(props) {
   const { window } = props;
+  const { user, loading } = React.useContext(AuthContext);
 
   const router = useDemoRouter('/Progressify');
   const location = useLocation();
 
   const demoWindow = window !== undefined ? window() : undefined;
+  
+  const filteredNav = React.useMemo(() => filterNavigation(NAVIGATION, user), [user]);
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
-    
     <AppProvider
-      navigation={filterNavigation(NAVIGATION)}
+      navigation={filteredNav}
       branding={{
         logo: <img src={logosrc} alt="MUI logo" />,
         title: 'Progressify',
-        homeUrl: '/',
+        homeUrl: user ? '/dashboard' : '/login',
       }}
       router={location.pathname.startsWith('/Progressify') ? router : undefined}
       theme={appTheme}
@@ -146,12 +175,10 @@ function DashboardLayoutBranding(props) {
         <DemoPageContent pathname={location.pathname} navigation={NAVIGATION} />
       </DashboardLayout>
     </AppProvider>
-    
   );
 }
 
 DashboardLayoutBranding.propTypes = {
-  
   window: PropTypes.func,
 };
 
