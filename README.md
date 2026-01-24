@@ -109,8 +109,8 @@ The application will be available at `http://localhost:3000`.
 └── ...
 ```
 
-## Screenshots
+<!-- ## Screenshots
 
 **Team Page**
-<!-- ![Team Page](img/team%20page.png) -->
+![Team Page](img/team%20page.png) -->
 
